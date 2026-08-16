@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Presenter Dashboard — AI, Faith &amp; the Future</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body class="dashboard">
+
+<div id="gate">
+  <form id="gate-form" class="gate-card">
+    <h2>Presenter Access</h2>
+    <input id="gate-input" type="password" placeholder="Passcode" autocomplete="off">
+    <button type="submit" class="btn" style="background:var(--gold);border-color:var(--gold);color:var(--ink-2);">Enter</button>
+    <div id="gate-err" class="gate-err"></div>
+  </form>
+</div>
+
+<div class="dash-wrap">
+  <div class="dash-header">
+    <h1>Live Results</h1>
+    <span id="status-pill" class="status-pill"><span class="dotlive"></span><span class="label">Checking…</span></span>
+  </div>
+  <div class="dash-sub"><span id="respondent-count">0 respondents so far</span> · updates in real time</div>
+
+  <div id="blocks"></div>
+</div>
+
+<script type="module" src="js/dashboard.js"></script>
+</body>
+</html>

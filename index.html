@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI, Faith &amp; the Future: What's Next?</title>
+<meta name="description" content="An interactive talk on artificial intelligence and Christian faith, with live audience surveys.">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="brand">AI, Faith &amp; the Future</div>
+<div id="pageinfo">01 / 27</div>
+<nav id="nav" aria-label="Slide navigation"></nav>
+<div class="arrows">
+  <button id="prev-btn" class="arrow-btn" aria-label="Previous slide">&#8593;</button>
+  <button id="next-btn" class="arrow-btn" aria-label="Next slide">&#8595;</button>
+</div>
+
+<div id="deck">
+
+  <!-- 1 : TITLE -->
+  <section class="slide on-ink" data-title="Title">
+    <div class="slide-inner">
+      <div class="title-mark">A talk in five parts</div>
+      <h1 class="title-xl">AI, Faith<br>&amp; the Future</h1>
+      <p class="title-md">What's next — and who are we becoming while it happens?</p>
+      <div class="scrolldown"><span class="chev">&#8595;</span> scroll or press an arrow key to begin</div>
+    </div>
+  </section>
+
+  <!-- 2 : PRE-SURVEY -->
+  <section class="slide on-parchment" data-title="Before We Begin">
+    <div class="slide-inner">
+      <div class="eyebrow">Before we begin</div>
+      <h2 class="title-lg">A quick check-in</h2>
+      <p class="lede">Three questions, thirty seconds. Your presenter will see the room's answers live.</p>
+      <div id="sync-banner" class="sync-banner"></div>
+      <div class="survey-card">
+        <form class="survey-form" data-survey-id="pre-survey">
+          <div class="question">
+            <div class="qlabel">1. How would you describe your relationship with AI tools right now?</div>
+            <div class="options">
+              <label class="opt"><input type="radio" name="familiarity" value="Never used them" required><span>Never used them</span></label>
+              <label class="opt"><input type="radio" name="familiarity" value="Curious but cautious"><span>Curious but cautious</span></label>
+              <label class="opt"><input type="radio" name="familiarity" value="Use them regularly"><span>Use them regularly</span></label>
+              <label class="opt"><input type="radio" name="familiarity" value="Integrated into my work"><span>Integrated into my work</span></label>
+            </div>
+          </div>
+          <div class="question">
+            <div class="qlabel">2. Right now, are you more hopeful or more worried about AI's impact on society?</div>
+            <div class="options">
+              <label class="opt"><input type="radio" name="outlook" value="Mostly hopeful" required><span>Mostly hopeful</span></label>
+              <label class="opt"><input type="radio" name="outlook" value="A genuine mix"><span>A genuine mix</span></label>
+              <label class="opt"><input type="radio" name="outlook" value="Mostly worried"><span>Mostly worried</span></label>
+              <label class="opt"><input type="radio" name="outlook" value="Haven't thought much about it"><span>Haven't thought much about it</span></label>
+            </div>
+          </div>
+          <div class="question">
+            <div class="qlabel">3. Optional — what's the one question about AI you most want answered tonight?</div>
+            <textarea name="question_for_tonight" placeholder="Type here…"></textarea>
+          </div>
+          <button type="submit" class="btn">Submit</button>
+          <div class="survey-status" role="status"></div>
+        </form>
+        <div class="thankyou">
+          <div class="stamp">Recorded.</div>
+          <p class="small">Thanks — settle in. We'll come back for two more check-ins along the way.</p>
+          <button class="edit-link" type="button">Change my answers</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 : CHAPTER I -->
+  <section class="slide on-ink chapter" data-title="I. What Is AI?">
+    <div class="slide-inner">
+      <div class="numeral">I</div>
+      <div class="eyebrow">Part One</div>
+      <h2 class="chapter-title">What Is AI?</h2>
+    </div>
+  </section>
+
+  <!-- 4 : Gutenberg story -->
+  <section class="slide on-ink" data-title="The Printing Press">
+    <div class="slide-inner">
+      <div class="eyebrow">1440, Mainz</div>
+      <p class="lede">A goldsmith named Johannes Gutenberg built a machine that could press ink onto paper faster than any scribe could write by hand.</p>
+      <blockquote>Within fifty years, the printing press had spread across Europe. It gave ordinary people a Bible in their own language — and it also fed a flood of propaganda, forged documents, and religious wars.</blockquote>
+      <p class="rule"></p>
+      <p class="lede italic">The press itself was neutral. What mattered was the hearts of the people who used it.</p>
+    </div>
+  </section>
+
+  <!-- 5 : the turn -->
+  <section class="slide on-ink" data-title="The Hinge Point">
+    <div class="slide-inner">
+      <div class="eyebrow">Tonight</div>
+      <p class="lede">We're standing at a similar hinge point. Except this time the "press" doesn't just copy words — it can write them, argue them, and increasingly <em>act</em> on them.</p>
+      <p class="title-md">That machine is artificial intelligence.</p>
+      <p class="lede">The question isn't whether AI will change the world — that's already happening. The question is: <strong>what kind of people will we be while it happens?</strong></p>
+    </div>
+  </section>
+
+  <!-- 6 : definition -->
+  <section class="slide on-parchment" data-title="A Working Definition">
+    <div class="slide-inner">
+      <div class="eyebrow">A working definition</div>
+      <h2 class="title-lg">Software that learns patterns — and now increasingly acts on them.</h2>
+      <p class="lede">Artificial intelligence is software that learns patterns from enormous amounts of data and uses those patterns to do things that used to require human judgment: writing, translating, recognizing faces, diagnosing illness, predicting outcomes, and now taking multi-step actions on our behalf.</p>
+    </div>
+  </section>
+
+  <!-- 7 : apprentice analogy -->
+  <section class="slide on-parchment" data-title="The Apprentice">
+    <div class="slide-inner">
+      <div class="eyebrow">A picture worth keeping</div>
+      <blockquote>Think of AI less like a calculator and more like an apprentice who has read almost everything ever written — but has never lived a single day of human life. It can imitate wisdom without possessing it. It can produce comfort without ever having grieved.</blockquote>
+      <p class="lede">That gap — between fluency and understanding — is the single most important thing to grasp about this technology.</p>
+    </div>
+  </section>
+
+  <!-- 8 : two waves -->
+  <section class="slide on-parchment" data-title="Two Waves">
+    <div class="slide-inner">
+      <div class="eyebrow">Two waves, one shift</div>
+      <h2 class="title-lg">From oracle to worker</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <h4>Generative AI</h4>
+          <p>Tools like ChatGPT and Claude that produce text, images, code, and conversation when you ask.</p>
+        </div>
+        <div class="card">
+          <h4>Agentic AI</h4>
+          <p>The newer wave: AI that doesn't just answer, but takes multi-step actions — booking, coding, managing workflows, negotiating on our behalf.</p>
+        </div>
+      </div>
+      <p class="lede" style="margin-top:26px;">This is the shift from AI as an oracle you consult, to AI as a worker that acts — and it raises the stakes considerably.</p>
+    </div>
+  </section>
+
+  <!-- 9 : CHAPTER II -->
+  <section class="slide on-ink chapter" data-title="II. How Is It Changing The World?">
+    <div class="slide-inner">
+      <div class="numeral">II</div>
+      <div class="eyebrow">Part Two</div>
+      <h2 class="chapter-title">How Is It Changing the World?</h2>
+    </div>
+  </section>
+
+  <!-- 10 : stats -->
+  <section class="slide on-ink" data-title="Infrastructure, Not Novelty">
+    <div class="slide-inner">
+      <div class="eyebrow">2026, in numbers</div>
+      <h2 class="title-lg">AI has become infrastructure.</h2>
+      <div class="stats">
+        <div class="stat">
+          <div class="figure">88%</div>
+          <div class="cap">of organizations worldwide now use AI in at least one business function.</div>
+          <span class="src">McKinsey, State of AI</span>
+        </div>
+        <div class="stat">
+          <div class="figure">$300B+</div>
+          <div class="cap">projected global spend on AI systems in 2026 — up nearly 35% year over year.</div>
+          <span class="src">IDC Worldwide AI Spending Guide</span>
+        </div>
+        <div class="stat">
+          <div class="figure">64%</div>
+          <div class="cap">of working-age adults in the most AI-fluent countries now use AI tools regularly — no longer a Silicon Valley phenomenon.</div>
+          <span class="src">Microsoft AI Diffusion Report</span>
+        </div>
+        <div class="stat">
+          <div class="figure">+56%</div>
+          <div class="cap">average wage premium for AI-skilled workers — a new, fast-forming inequality.</div>
+          <span class="src">Workforce adoption research, 2026</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 : human story -->
+  <section class="slide on-ink" data-title="A Human Story">
+    <div class="slide-inner">
+      <div class="eyebrow">A story, not a statistic</div>
+      <blockquote>A friend of mine runs a small customer service team. Eighteen months ago she had twelve people. Today she has four — and an AI system that handles the routine tickets. The four who remain are paid more and do more meaningful work. Eight people had to find a new way to make a living.</blockquote>
+      <p class="lede italic">AI didn't destroy her business. It transformed it. And transformation always has a cost, paid by someone.</p>
+    </div>
+  </section>
+
+  <!-- 12 : POLL 1 -->
+  <section class="slide on-parchment" data-title="Quick Poll">
+    <div class="slide-inner">
+      <div class="eyebrow">Check-in, part two</div>
+      <h2 class="title-lg">Which impact feels most real to you?</h2>
+      <div class="survey-card">
+        <form class="survey-form" data-survey-id="poll-1">
+          <div class="question">
+            <div class="qlabel">Right now, in your own life or work — which of these feels closest to home?</div>
+            <div class="options">
+              <label class="opt"><input type="radio" name="impact" value="Jobs and the economy" required><span>Jobs &amp; the economy</span></label>
+              <label class="opt"><input type="radio" name="impact" value="Trust and misinformation"><span>Trust &amp; misinformation</span></label>
+              <label class="opt"><input type="radio" name="impact" value="Creativity and new opportunity"><span>Creativity &amp; opportunity</span></label>
+              <label class="opt"><input type="radio" name="impact" value="Relationships and community"><span>Relationships &amp; community</span></label>
+            </div>
+          </div>
+          <button type="submit" class="btn">Submit</button>
+          <div class="survey-status" role="status"></div>
+        </form>
+        <div class="thankyou">
+          <div class="stamp">Got it.</div>
+          <p class="small">We'll see the room's answers come together live.</p>
+          <button class="edit-link" type="button">Change my answer</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13 : CHAPTER III -->
+  <section class="slide on-ink chapter" data-title="III. Opportunities and Risks">
+    <div class="numeral">III</div>
+    <div class="slide-inner">
+      <div class="eyebrow">Part Three</div>
+      <h2 class="chapter-title">Opportunities &amp; Risks</h2>
+    </div>
+  </section>
+
+  <!-- 14 : opportunities -->
+  <section class="slide on-ink" data-title="Opportunities">
+    <div class="slide-inner">
+      <div class="eyebrow">Genuinely, in fairness</div>
+      <h2 class="title-lg">What AI makes possible</h2>
+      <div class="grid cols-3">
+        <div class="card">
+          <h4>Amplified capability</h4>
+          <p>A rural clinic can access diagnostic support once reserved for major hospitals. A small nonprofit can draft proposals and analyze data like a full research team.</p>
+        </div>
+        <div class="card">
+          <h4>Time returned</h4>
+          <p>Repetitive, draining administrative work can be handed off — freeing people for the relational and creative work only humans can do.</p>
+        </div>
+        <div class="card">
+          <h4>Access and inclusion</h4>
+          <p>Translation, literacy support, and assistive tools are giving voice to people previously locked out of full participation.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 15 : risks -->
+  <section class="slide on-ink" data-title="Risks">
+    <div class="slide-inner">
+      <div class="eyebrow">Genuinely, in fairness</div>
+      <h2 class="title-lg">What AI puts at risk</h2>
+      <div class="grid cols-2">
+        <div class="card risk">
+          <h4>Economic disruption</h4>
+          <p>Real displacement is falling hardest on those with the least cushion to absorb it, even where the long-run transition proves net-positive.</p>
+        </div>
+        <div class="card risk">
+          <h4>Truth and trust erosion</h4>
+          <p>Convincing misinformation, fake images, and cloned voices at a scale no prior technology allowed. When anything can be faked, the temptation is to trust nothing.</p>
+        </div>
+        <div class="card risk">
+          <h4>Concentration of power</h4>
+          <p>A small number of companies and nations now shape systems mediating information and opportunity for billions.</p>
+        </div>
+        <div class="card risk">
+          <h4>The discipleship question</h4>
+          <p>As AI grows emotionally fluent — patient, affirming, always available — what happens to community and dependence on God?</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 16 : bridge -->
+  <section class="slide on-ink" data-title="The Bridge">
+    <div class="slide-inner">
+      <p class="lede">Every risk and opportunity on the last two slides is, underneath the technology, a question about <strong>what we worship, what we trust, and who we believe we are.</strong></p>
+      <p class="title-md">Which means this isn't just a technology conversation. It's a faith conversation.</p>
+    </div>
+  </section>
+
+  <!-- 17 : POLL 2 -->
+  <section class="slide on-parchment" data-title="Quick Poll">
+    <div class="slide-inner">
+      <div class="eyebrow">Check-in, part three</div>
+      <h2 class="title-lg">Where do you lean, by default?</h2>
+      <div class="survey-card">
+        <form class="survey-form" data-survey-id="poll-2">
+          <div class="question">
+            <div class="qlabel">When you imagine trusting AI versus trusting God with a real decision — where do you honestly find yourself leaning, day to day?</div>
+            <div class="options">
+              <label class="opt"><input type="radio" name="trust_lean" value="Mostly toward God" required><span>Mostly toward God</span></label>
+              <label class="opt"><input type="radio" name="trust_lean" value="Whichever is more convenient"><span>Whichever is more convenient</span></label>
+              <label class="opt"><input type="radio" name="trust_lean" value="Mostly toward the tool"><span>Mostly toward the tool</span></label>
+              <label class="opt"><input type="radio" name="trust_lean" value="Honestly not sure"><span>Honestly not sure</span></label>
+            </div>
+          </div>
+          <button type="submit" class="btn">Submit</button>
+          <div class="survey-status" role="status"></div>
+        </form>
+        <div class="thankyou">
+          <div class="stamp">Thank you for your honesty.</div>
+          <p class="small">No judgment here — just a mirror before we go further.</p>
+          <button class="edit-link" type="button">Change my answer</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 18 : CHAPTER IV -->
+  <section class="slide on-ink chapter" data-title="IV. What Does Christian Faith Say?">
+    <div class="numeral">IV</div>
+    <div class="slide-inner">
+      <div class="eyebrow">Part Four</div>
+      <h2 class="chapter-title">What Does Christian Faith Say?</h2>
+    </div>
+  </section>
+
+  <!-- 19 : image of God -->
+  <section class="slide on-parchment" data-title="Made in the Image of God">
+    <div class="slide-inner">
+      <div class="eyebrow">Genesis 1:27</div>
+      <h2 class="title-lg">Our creativity reflects our Maker.</h2>
+      <p class="lede">Humanity is made <em>imago Dei</em> — in God's image. One implication is creativity itself: we build, shape, and invent because our Creator does. AI is, in that sense, a fruit of the image of God in us.</p>
+      <p class="rule"></p>
+      <p class="lede">But the image of God is relational and moral, not merely functional. Intelligence was never the whole of what it means to be human. A being can be extraordinarily capable and still be nothing like God — because capability was never the point. Love, faithfulness, and relationship were.</p>
+    </div>
+  </section>
+
+  <!-- 20 : Babel -->
+  <section class="slide on-parchment" data-title="The Tower of Babel">
+    <div class="slide-inner">
+      <div class="eyebrow">Genesis 11</div>
+      <h2 class="title-lg">"Let us build a tower… and make a name for ourselves."</h2>
+      <p class="lede">A story about technological achievement, human unity, and ambition — turned toward self-glorification instead of God's purposes. God didn't condemn building itself; He interrupted a project where human power had outrun human wisdom and humility.</p>
+      <p class="lede italic">A striking caution for anyone racing to build or adopt ever more powerful systems: capability is not wisdom, and "because we can" is not "because we should."</p>
+    </div>
+  </section>
+
+  <!-- 21 : Proverbs -->
+  <section class="slide on-parchment" data-title="Proverbs 3:5">
+    <div class="slide-inner">
+      <div class="eyebrow">Wisdom literature</div>
+      <h2 class="title-lg">Technology tests the heart. It doesn't replace it.</h2>
+      <p class="lede">Proverbs is obsessed with one question — not <em>what do you know</em>, but <em>what do you love, and whom do you trust?</em></p>
+      <blockquote>"Trust in the Lord with all your heart, and do not lean on your own understanding." — Proverbs 3:5</blockquote>
+      <p class="lede">AI will increasingly offer understanding on demand. The danger isn't using the tool — it's quietly transferring our trust from God to the tool.</p>
+    </div>
+  </section>
+
+  <!-- 22 : Stewardship -->
+  <section class="slide on-parchment" data-title="Stewardship">
+    <div class="slide-inner">
+      <div class="eyebrow">Genesis 2:15</div>
+      <h2 class="title-lg">Not fear. Not idolatry. Stewardship.</h2>
+      <div class="grid cols-2" style="margin-top:10px;">
+        <div class="card risk"><h4>Fear</h4><p>"This is dangerous — avoid it entirely."</p></div>
+        <div class="card risk"><h4>Idolatry</h4><p>"This will solve everything — maybe even save us."</p></div>
+      </div>
+      <p class="lede" style="margin-top:26px;">Scripture offers a third way. Humanity is placed in the garden "to work it and take care of it" — dominion exercised as service, not domination. Use it. Shape it. Set boundaries around it. Hold it loosely enough that it never becomes what we worship.</p>
+    </div>
+  </section>
+
+  <!-- 23 : Love of neighbor -->
+  <section class="slide on-parchment" data-title="Love of Neighbor">
+    <div class="slide-inner">
+      <div class="eyebrow">The test that doesn't change</div>
+      <h2 class="title-lg">Love God. Love neighbor.</h2>
+      <p class="lede">A practical filter for every use of AI: <strong>does this make me more loving, more truthful, more present to the people around me — or less?</strong></p>
+      <ul class="plain">
+        <li>An AI tool that frees you for unhurried time with your family passes that test.</li>
+        <li>An AI companion that quietly replaces real relationships does not.</li>
+        <li>An AI that helps a small church serve its community better passes the test.</li>
+        <li>An AI-generated sermon with none of the pastor's own prayer behind it should give us pause.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 24 : CHAPTER V -->
+  <section class="slide on-ink chapter" data-title="V. How Can We Get Started?">
+    <div class="numeral">V</div>
+    <div class="slide-inner">
+      <div class="eyebrow">Part Five</div>
+      <h2 class="chapter-title">How Can We Get Started?</h2>
+    </div>
+  </section>
+
+  <!-- 25 : individuals -->
+  <section class="slide on-ink" data-title="For Individuals">
+    <div class="slide-inner">
+      <div class="eyebrow">For individuals</div>
+      <ul class="plain">
+        <li><strong>Get literate, not just opinionated.</strong> Spend thirty minutes this week actually using an AI tool. Fear and hype both thrive on ignorance.</li>
+        <li><strong>Set a personal rule of trust.</strong> Decide in advance what you'll never outsource — prayer, real discernment, comforting a grieving friend.</li>
+        <li><strong>Bring it to community, not just a search bar.</strong> Test what AI tells you against Scripture and against people who know you.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 26 : families & churches -->
+  <section class="slide on-ink" data-title="For Families and Churches">
+    <div class="slide-inner">
+      <div class="eyebrow">For families &amp; churches</div>
+      <ul class="plain">
+        <li><strong>Talk with your kids before the culture does.</strong> Chatbots, companionship apps, homework tools — name them openly at home.</li>
+        <li><strong>Form a small team at church</strong> — not just "the tech person" — to ask where AI could free staff and volunteers for more relational ministry, and where you should deliberately choose the slower, human way.</li>
+        <li><strong>Teach on this from the pulpit.</strong> Silence leaves people to be discipled by the technology instead of by Scripture.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 27 : closing -->
+  <section class="slide on-ink" data-title="Closing">
+    <div class="slide-inner">
+      <div class="eyebrow">Back to Mainz, 1440</div>
+      <p class="lede">The printing press didn't determine whether Europe would have a Reformation or a century of wars — the hearts of the people who held it did.</p>
+      <p class="lede">AI will not determine whether the next fifty years are marked by flourishing or fracture. That will be decided by whether the people building it, using it, and being shaped by it are rooted in something — Someone — bigger than the machine.</p>
+      <blockquote>"Trust in the Lord with all your heart, and do not lean on your own understanding." Proverbs was written three thousand years before anyone imagined a machine that could think. It has never been more relevant than tonight.</blockquote>
+    </div>
+  </section>
+
+  <!-- 28 : POST-SURVEY -->
+  <section class="slide on-parchment" data-title="Before You Go">
+    <div class="slide-inner">
+      <div class="eyebrow">Before you go</div>
+      <h2 class="title-lg">One last check-in</h2>
+      <div class="survey-card">
+        <form class="survey-form" data-survey-id="post-survey">
+          <div class="question">
+            <div class="qlabel">1. Has tonight shifted your view of AI?</div>
+            <div class="options">
+              <label class="opt"><input type="radio" name="shift" value="More hopeful" required><span>More hopeful</span></label>
+              <label class="opt"><input type="radio" name="shift" value="More cautious"><span>More cautious</span></label>
+              <label class="opt"><input type="radio" name="shift" value="About the same"><span>About the same</span></label>
+              <label class="opt"><input type="radio" name="shift" value="Still processing"><span>Still processing</span></label>
+            </div>
+          </div>
+          <div class="question">
+            <div class="qlabel">2. Which one thing will you actually try this week? (pick any that fit)</div>
+            <div class="options">
+              <label class="opt"><input type="checkbox" name="commitment" value="Spend 30 min learning an AI tool"><span>Try an AI tool for 30 min</span></label>
+              <label class="opt"><input type="checkbox" name="commitment" value="Set a personal rule of trust"><span>Set a personal rule of trust</span></label>
+              <label class="opt"><input type="checkbox" name="commitment" value="Talk with my kids about it"><span>Talk with my kids about it</span></label>
+              <label class="opt"><input type="checkbox" name="commitment" value="Bring this up at church"><span>Bring this up at church</span></label>
+            </div>
+          </div>
+          <div class="question">
+            <div class="qlabel">3. Optional — any feedback, or a question you'd like followed up on?</div>
+            <textarea name="feedback" placeholder="Type here…"></textarea>
+          </div>
+          <button type="submit" class="btn">Submit</button>
+          <div class="survey-status" role="status"></div>
+        </form>
+        <div class="thankyou">
+          <div class="stamp">Thank you.</div>
+          <p class="small">That's the talk. Go well — and go thoughtfully.</p>
+          <button class="edit-link" type="button">Change my answers</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script type="module" src="js/presentation.js"></script>
+</body>
+</html>
