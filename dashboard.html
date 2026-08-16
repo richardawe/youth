@@ -10,6 +10,17 @@
 </head>
 <body class="dashboard">
 
+<div id="gate" class="dash-gate">
+  <div class="gate-panel">
+    <h2>Presenter access</h2>
+    <p>Enter the passcode to view live responses.</p>
+    <form id="gate-form">
+      <input id="gate-input" type="password" placeholder="Enter passcode" autocomplete="off">
+      <button type="submit">Unlock dashboard</button>
+      <div id="gate-err" aria-live="polite"></div>
+    </form>
+  </div>
+</div>
 
 <div class="dash-wrap">
   <div class="dash-header">

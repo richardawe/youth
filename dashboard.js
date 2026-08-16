@@ -7,18 +7,21 @@ const gateForm = document.getElementById('gate-form');
 const gateInput = document.getElementById('gate-input');
 const gateErr = document.getElementById('gate-err');
 
-if (sessionStorage.getItem('dash-unlocked') === 'true') {
+if (gate && sessionStorage.getItem('dash-unlocked') === 'true') {
   gate.style.display = 'none';
 }
-gateForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-  if (gateInput.value === DASHBOARD_PASSCODE) {
-    sessionStorage.setItem('dash-unlocked', 'true');
-    gate.style.display = 'none';
-  } else {
-    gateErr.textContent = 'Incorrect passcode.';
-  }
-});
+
+if (gateForm && gateInput && gateErr) {
+  gateForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (gateInput.value === DASHBOARD_PASSCODE) {
+      sessionStorage.setItem('dash-unlocked', 'true');
+      if (gate) gate.style.display = 'none';
+    } else {
+      gateErr.textContent = 'Incorrect passcode.';
+    }
+  });
+}
 
 // ---------- survey schema (mirrors index.html) ----------
 const SCHEMA = [
