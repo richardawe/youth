@@ -48,6 +48,20 @@ function doGet(e) {
 
 function doPost(e) {
   const payload = JSON.parse(e.postData.contents);
+
+  if (payload && payload.action === 'clearSession') {
+    const sheet = getSheet_();
+    const lastRow = sheet.getLastRow();
+    const clearedCount = Math.max(0, lastRow - 1);
+
+    if (clearedCount > 0) {
+      sheet.getRange(2, 1, clearedCount, HEADERS.length).clear();
+    }
+
+    return ContentService.createTextOutput(JSON.stringify({ ok: true, cleared: clearedCount }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
   const sheet = getSheet_();
   const data = sheet.getDataRange().getValues();
 

@@ -1,4 +1,4 @@
-import { subscribeAllResponses, usingLiveSync } from './data-store.js';
+import { subscribeAllResponses, usingLiveSync, clearAllResponses } from './data-store.js';
 import { DASHBOARD_PASSCODE } from './sheet-config.js';
 
 // ---------- passcode gate ----------
@@ -60,6 +60,7 @@ const SCHEMA = [
 const root = document.getElementById('blocks');
 const respondentCountEl = document.getElementById('respondent-count');
 const statusPill = document.getElementById('status-pill');
+const clearSessionBtn = document.getElementById('clear-session-btn');
 
 function render(rows) {
   const bySlide = {};
@@ -159,9 +160,31 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
+async function resetSession() {
+  if (!clearSessionBtn || !window.confirm('Clear all current responses and reset the session?')) {
+    return;
+  }
+
+  clearSessionBtn.disabled = true;
+  try {
+    const result = await clearAllResponses();
+    root.innerHTML = '';
+    render([]);
+    statusPill.querySelector('.label').textContent = result.synced ? 'Session reset — ready for new responses' : 'Session reset — local cache cleared';
+  } catch (err) {
+    console.error(err);
+    statusPill.querySelector('.label').textContent = 'Reset failed — try again';
+  } finally {
+    clearSessionBtn.disabled = false;
+  }
+}
+
 (async () => {
   const live = await usingLiveSync();
   statusPill.classList.toggle('live', live);
   statusPill.querySelector('.label').textContent = live ? 'Live sync connected' : 'Local only — see README';
+  if (clearSessionBtn) {
+    clearSessionBtn.addEventListener('click', resetSession);
+  }
   await subscribeAllResponses(render);
 })();

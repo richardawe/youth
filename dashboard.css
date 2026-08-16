@@ -36,6 +36,12 @@ body.dashboard {
   margin-bottom: 10px;
 }
 
+.dash-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .dash-header h1 {
   margin: 0;
   font-family: Georgia, serif;
@@ -61,6 +67,28 @@ body.dashboard {
   text-transform: uppercase;
   padding: 8px 12px;
   border-radius: 999px;
+}
+
+.clear-session-btn {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255,255,255,0.04);
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.clear-session-btn:hover {
+  background: rgba(255,255,255,0.08);
+}
+
+.clear-session-btn:disabled {
+  opacity: 0.55;
+  cursor: wait;
 }
 
 .dotlive {

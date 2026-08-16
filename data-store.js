@@ -59,6 +59,30 @@ export async function usingLiveSync() {
   return isBackendConfigured();
 }
 
+export async function clearAllResponses() {
+  const all = readLocal();
+  const clearedLocal = Object.keys(all).length;
+
+  if (!isBackendConfigured()) {
+    localStorage.removeItem(LOCAL_KEY);
+    return { synced: false, cleared: clearedLocal };
+  }
+
+  const res = await fetch(SCRIPT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ action: 'clearSession' })
+  });
+
+  if (!res.ok) {
+    throw new Error(`Failed to clear responses: ${res.status}`);
+  }
+
+  localStorage.removeItem(LOCAL_KEY);
+  const payload = await res.json().catch(() => ({}));
+  return { synced: true, cleared: payload.cleared ?? clearedLocal };
+}
+
 /**
  * Dashboard only: poll the sheet for all responses and call back
  * with a fresh array of {sessionId, slideId, answers, ts} every
