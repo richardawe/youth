@@ -8,7 +8,7 @@
 // to edit it in one place.
 // ============================================================
 
-export const SCRIPT_URL = "YOUR_APPS_SCRIPT_WEB_APP_URL";
+export const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby5D9hxdrYT7T9YHsxxgFSSD_7LxmiJULdqYakpmKr6F7j1u-CQOSDc7sB1Mm7ZwD5Y/exec";
 
 // A simple shared passcode so casual visitors can't stumble onto
 // your live results by guessing the dashboard.html URL. This is a
