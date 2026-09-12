@@ -10,7 +10,7 @@
 // ============================================================
 
 // Paste your Apps Script web app /exec URL between the quotes.
-export const SCRIPT_URL = "";
+export const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyBJn_dT9FXIW2L4QNZJ0oDCIZzMV5UEnF_JGywZrq24jrEG2X9pOGwyR-AU8AKU21pVQ/exec";
 
 // Every session runs under a short room code. Students type it (or
 // scan the QR, which fills it in for them). Leave this blank to get
