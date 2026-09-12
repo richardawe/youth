@@ -9,7 +9,7 @@
 // words, to put it face down and look up.
 // ============================================================
 
-import { ENABLE_WHY } from './config.js';
+import { ENABLE_WHY, POLL_INTERVAL_MS } from './config.js';
 import { getIdentity, sigilSvg } from './identity.js';
 import {
   CORNERS, cornerById, BELONGS_OPTIONS, VERSE_SORT, VERSES,
@@ -109,7 +109,20 @@ async function start() {
       : "I'd actually like to talk to someone";
 
     render();
-  });
+  }, pollInterval);
+}
+
+/**
+ * Normally the relaxed interval is right — the phone is a follower and
+ * nothing is urgent. The exception is sitting on Wall B with the sheet
+ * still on: that reveal is supposed to land across the whole room at once,
+ * so poll hard until it arrives, then go back to relaxed. It's a short
+ * burst on one slide, not a permanently faster poll.
+ */
+function pollInterval() {
+  const stage = control?.stage;
+  const awaitingReveal = stage === 'wallB' && !control?.revealed;
+  return awaitingReveal ? 700 : POLL_INTERVAL_MS;
 }
 
 // ============================================================

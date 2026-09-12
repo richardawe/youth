@@ -7,7 +7,7 @@
 // leader.html is an optional remote that can drive it from the front.
 // ============================================================
 
-import { REHEARSAL_MODE, ENABLE_WHY, POLL_INTERVAL_MS } from './config.js';
+import { REHEARSAL_MODE, ENABLE_WHY, POLL_INTERVAL_MS, IS_LOCAL, SCRIPT_URL } from './config.js';
 import { sigilSvg, mintSynthetic } from './identity.js';
 import {
   CORNERS, cornerIndex, BELONGS_OPTIONS, VERSE_SORT, VERSES,
@@ -32,26 +32,61 @@ let phonesDown = false;
 let lastNavSeq = 0;
 let synthetic = [];
 
-// ---------- join details ----------
-const joinUrl = (() => {
-  const url = new URL('join.html', location.href);
-  url.searchParams.set('room', room);
-  return url.href;
-})();
-
+// ============================================================
+// JOIN DETAILS
+//
+// The QR is the only instruction students get, so it has to encode an
+// address their phones can actually reach. Building it from location.href
+// is wrong in the one case that matters: the leader opens the projector
+// page on `localhost`, and every phone in the room then scans a code
+// pointing at their own device. So when we're on the local server we ask
+// it for the laptop's LAN address and build the QR from that instead.
+// ============================================================
 document.getElementById('roombadge').textContent = room;
 document.getElementById('roomcode').textContent = room;
-document.getElementById('joinurl').textContent =
-  joinUrl.replace(/^https?:\/\//, '').replace(/\?room=.*$/, '');
 
-try {
-  document.getElementById('qrbox').innerHTML = toSvg(joinUrl);
-} catch (err) {
-  // Never let a QR failure take the join screen down — the code and the
-  // URL beside it are enough to run the session.
-  console.error('QR generation failed', err);
-  document.getElementById('qrbox').innerHTML =
-    '<p style="color:#131A22;font-size:13px;text-align:center;padding:12px">Type the address below into your browser.</p>';
+function buildJoinUrl(base) {
+  const url = new URL('join.html', base);
+  url.searchParams.set('room', room);
+  return url.href;
+}
+
+function paintJoin(joinUrl) {
+  document.getElementById('joinurl').textContent =
+    joinUrl.replace(/^https?:\/\//, '').replace(/\/join\.html.*$/, '');
+  try {
+    document.getElementById('qrbox').innerHTML = toSvg(joinUrl);
+  } catch (err) {
+    // Never let a QR failure take the join screen down — the address and
+    // code underneath are enough to run the session.
+    console.error('QR generation failed', err);
+    document.getElementById('qrbox').innerHTML =
+      '<p style="color:#131A22;font-size:14px;text-align:center;padding:16px;line-height:1.5">'
+      + 'Type the address below into your browser.</p>';
+  }
+}
+
+// Draw something immediately, then correct it once the server answers.
+paintJoin(buildJoinUrl(location.href));
+
+if (IS_LOCAL) {
+  (async () => {
+    try {
+      const res = await fetch(`${SCRIPT_URL}?ping=1`, { cache: 'no-store' });
+      const info = await res.json();
+
+      if (!info.lan) {
+        // The laptop has no network, so nothing the phones hold can reach
+        // it. Say so plainly rather than showing an unscannable code.
+        document.getElementById('lanwarn').hidden = false;
+        return;
+      }
+      const lanJoin = buildJoinUrl(`${info.lan}/two-walls/`);
+      if (lanJoin !== buildJoinUrl(location.href)) paintJoin(lanJoin);
+    } catch (err) {
+      console.warn('Could not ask the local server for its LAN address:', err);
+    }
+  })();
 }
 
 // ---------- navigation ----------

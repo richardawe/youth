@@ -7,9 +7,7 @@
 <meta name="description" content="An interactive youth session on Ecclesiastes 11:9, where the room answers on their phones.">
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 fill=%27%23131A22%27/%3E%3Crect x=%276%27 y=%278%27 width=%278%27 height=%2716%27 fill=%27%23F2A93B%27/%3E%3Crect x=%2718%27 y=%278%27 width=%278%27 height=%2716%27 fill=%27%236BA8CB%27/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="fonts/fonts.css">
 <link rel="stylesheet" href="css/screen.css">
 </head>
 <body>
@@ -69,6 +67,14 @@
     <div class="wrap full">
       <p class="kicker">Get your phone out — that's the only time I'll ever say that</p>
 
+      <div class="stale" id="lanwarn" hidden>
+        <div>
+          <strong>This laptop isn't on a wifi network.</strong>
+          <span>Phones have nothing to reach, so the QR code won't work. Join the same
+            wifi as the students, then reload this page.</span>
+        </div>
+      </div>
+
       <div class="stale" id="stale" hidden>
         <div>
           <strong id="staletext">This room already has answers in it.</strong>
@@ -80,14 +86,13 @@
       <div class="joingrid">
         <div>
           <div class="qrbox" id="qrbox"></div>
-          <p class="qrcap">Point your camera at this.</p>
+          <p class="qrcap"><strong>Point your camera at this.</strong> That's all.</p>
+          <p class="fallback">
+            No camera? Go to <span id="joinurl">…</span>
+            and enter <span id="roomcode" class="codeinline">····</span>
+          </p>
         </div>
         <div>
-          <p class="dim" style="font-size:13px;margin:0 0 6px">or go to</p>
-          <p class="joinurl" id="joinurl">…</p>
-          <p class="dim" style="font-size:13px;margin:0 0 6px">and enter the code</p>
-          <p class="roomcode" id="roomcode">····</p>
-
           <div class="rosterhead">
             <span class="n" id="joincount">0</span>
             <span class="lbl">in the room so far</span>

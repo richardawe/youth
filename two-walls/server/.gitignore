@@ -1,0 +1,4 @@
+# Live session answers. This is a room's data, not code — it should never
+# end up in the repository. Delete it whenever you want a clean slate;
+# the leader remote's "Clear this room's answers" does the same thing.
+session-data.json

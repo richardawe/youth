@@ -153,16 +153,24 @@ ol.qs li:last-child{border-bottom:0}
 .stale span{font-size:13.5px;color:var(--slate);line-height:1.5}
 .stale .btn{flex:0 0 auto}
 
-.joingrid{display:grid;grid-template-columns:minmax(0,400px) minmax(0,1fr);gap:clamp(28px,5vw,64px);align-items:center;width:100%}
-.qrbox{background:var(--chalk);padding:16px;border-radius:3px;width:100%;max-width:400px;aspect-ratio:1;display:flex;align-items:center;justify-content:center}
-.qrbox svg,.qrbox canvas{width:100%;height:100%;display:block;image-rendering:pixelated}
-.qrcap{font-size:13px;color:var(--slate);margin-top:14px}
-.roomcode{
-  font-family:var(--serif);font-weight:300;
-  font-size:clamp(54px,11vw,120px);line-height:1;letter-spacing:.08em;
-  color:var(--sun);margin:0 0 6px;font-variant-numeric:tabular-nums;
+/* The QR is the hero: scanning is the whole instruction, and nobody
+   should be typing an IP address off a projector. The code and address
+   stay as a small fallback for a phone with no working camera. */
+.joingrid{display:grid;grid-template-columns:minmax(0,520px) minmax(0,1fr);gap:clamp(28px,5vw,64px);align-items:center;width:100%}
+.qrbox{
+  background:var(--chalk);padding:18px;border-radius:4px;
+  width:100%;max-width:520px;aspect-ratio:1;
+  display:flex;align-items:center;justify-content:center;
 }
-.joinurl{font-size:clamp(15px,2vw,20px);color:var(--chalk);word-break:break-all;margin:0 0 8px}
+.qrbox svg,.qrbox canvas{width:100%;height:100%;display:block;image-rendering:pixelated}
+.qrcap{font-size:clamp(15px,1.9vw,19px);color:var(--chalk);margin-top:18px}
+.qrcap strong{color:var(--sun)}
+.fallback{font-size:13px;color:var(--slate);margin:8px 0 0;line-height:1.6}
+.fallback #joinurl{color:rgba(236,230,217,.8);word-break:break-all}
+.codeinline{
+  font-family:var(--serif);font-size:17px;letter-spacing:.14em;
+  color:var(--sun);white-space:nowrap;
+}
 
 .rosterhead{display:flex;align-items:baseline;gap:12px;margin:30px 0 14px;border-top:1px solid var(--line);padding-top:20px}
 .rosterhead .n{font-family:var(--serif);font-size:40px;line-height:1;color:var(--chalk)}
@@ -288,7 +296,8 @@ ol.qs li:last-child{border-bottom:0}
    ============================================================ */
 @media (max-width:900px){
   .joingrid{grid-template-columns:1fr}
-  .qrbox{max-width:260px}
+  .qrbox{max-width:360px}
+  .qrbox{max-width:300px}
 }
 @media (max-width:760px){
   .split{grid-template-columns:1fr}

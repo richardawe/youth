@@ -1,16 +1,47 @@
 // ============================================================
 // TWO WALLS — LIVE : CONFIG
 //
-// This is the only file you need to edit. See README.md for the
-// five-minute Google Sheet setup that turns on live sync.
+// There is nothing you have to edit here to run the session.
 //
-// Until you paste a SCRIPT_URL below, everything still runs —
-// the session falls back to OFFLINE MODE, where the leader taps
-// the counters by hand exactly like the original paper version.
+// The backend is chosen from WHERE THE PAGE WAS OPENED, so the same
+// files work both ways with no config switching:
+//
+//   Opened from the laptop server  ->  that laptop, over the room's
+//   (server/serve.mjs or .py)          own wifi. No internet at all,
+//                                      answers in ~1ms. THIS IS THE
+//                                      RECOMMENDED WAY TO RUN IT.
+//
+//   Opened from GitHub Pages       ->  the Google Sheet below, for
+//                                      when people are not in one room.
+//
+// If neither is reachable the session still runs: it falls back to
+// OFFLINE MODE and the leader taps the counters by hand, exactly like
+// the original paper version.
 // ============================================================
 
-// Paste your Apps Script web app /exec URL between the quotes.
-export const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyBJn_dT9FXIW2L4QNZJ0oDCIZzMV5UEnF_JGywZrq24jrEG2X9pOGwyR-AU8AKU21pVQ/exec";
+// Your Apps Script /exec URL — only used when the page is served from
+// the internet rather than from the laptop.
+export const CLOUD_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyBJn_dT9FXIW2L4QNZJ0oDCIZzMV5UEnF_JGywZrq24jrEG2X9pOGwyR-AU8AKU21pVQ/exec";
+
+/**
+ * True when this page came from the local session server rather than from
+ * the internet. Anything that isn't a public web host is treated as local,
+ * which covers localhost, a LAN address, and a phone opening the laptop's
+ * address over wifi.
+ */
+export const IS_LOCAL = (() => {
+  const h = location.hostname;
+  if (!h) return false;                            // opened as a file://
+  if (h === 'localhost' || h === '127.0.0.1' || h === '::1') return true;
+  return /^192\.168\./.test(h)
+    || /^10\./.test(h)
+    || /^172\.(1[6-9]|2\d|3[01])\./.test(h)
+    || /\.local$/.test(h);
+})();
+
+// The local server answers on /api at the same origin the page came from,
+// so phones need no configuration whatsoever — they just load the page.
+export const SCRIPT_URL = IS_LOCAL ? `${location.origin}/api` : CLOUD_SCRIPT_URL;
 
 // Every session runs under a short room code. Students type it (or
 // scan the QR, which fills it in for them). Leave this blank to get
@@ -19,9 +50,13 @@ export const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyBJn_dT9FXIW
 export const ROOM_CODE = "";
 
 // How often the projector and phones check for new answers (ms).
-// 1800 keeps the room map feeling alive. Don't go below ~1200 or
-// you'll burn through Apps Script quota for no visible gain.
-export const POLL_INTERVAL_MS = 1800;
+//
+// On the laptop server a request costs about a millisecond, so we can poll
+// fast and the room map moves as people tap. Against Apps Script every
+// request costs roughly two seconds no matter what — its own overhead plus
+// a mandatory redirect — so polling faster there buys nothing and only
+// burns quota.
+export const POLL_INTERVAL_MS = IS_LOCAL ? 400 : 1800;
 
 // Keeps casual visitors off the leader remote. A convenience lock,
 // not real security — anyone who reads this file can see it.
@@ -44,5 +79,8 @@ export const REHEARSAL_MODE = false;
 export const ENABLE_WHY = true;
 
 export function isBackendConfigured() {
-  return Boolean(SCRIPT_URL && SCRIPT_URL.startsWith("https://"));
+  // The local server is plain http on a LAN address — there are no
+  // certificates on a church wifi — so this must accept http too, or the
+  // whole local mode would silently fall back to the hand tally.
+  return Boolean(SCRIPT_URL && /^https?:\/\//.test(SCRIPT_URL));
 }

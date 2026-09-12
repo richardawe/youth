@@ -219,9 +219,21 @@ function safeParse(s) {
  * Poll for every row in this room. Returns an unsubscribe function.
  * Rows arrive as { sessionId, key, value, alias, color, sigil, ts }.
  */
-export function subscribe(room, callback) {
+export function subscribe(room, callback, intervalFor) {
   let stopped = false;
   let timer = null;
+
+  // Apps Script spends roughly two seconds on every request regardless of
+  // how little work it does — its own overhead plus the mandatory redirect
+  // hop. Since the next poll is scheduled after the previous one returns,
+  // the default cadence lands near four seconds, which is too slow for the
+  // one moment built to feel simultaneous: Wall B coming off every phone at
+  // once. `intervalFor` lets a caller shorten the gap while it is waiting
+  // for a specific change, and go back to the relaxed interval afterwards.
+  const nextDelay = () => {
+    const wanted = intervalFor ? intervalFor() : POLL_INTERVAL_MS;
+    return Math.max(300, wanted || POLL_INTERVAL_MS);
+  };
 
   async function tick() {
     if (stopped) return;
@@ -247,7 +259,7 @@ export function subscribe(room, callback) {
       }
     }
 
-    if (!stopped) timer = setTimeout(tick, POLL_INTERVAL_MS);
+    if (!stopped) timer = setTimeout(tick, nextDelay());
   }
 
   tick();
