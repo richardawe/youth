@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two Walls — Live</title>
+<meta name="description" content="An interactive youth session on Ecclesiastes 11:9, where the room answers on their phones.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 fill=%27%23131A22%27/%3E%3Crect x=%276%27 y=%278%27 width=%278%27 height=%2716%27 fill=%27%23F2A93B%27/%3E%3Crect x=%2718%27 y=%278%27 width=%278%27 height=%2716%27 fill=%27%236BA8CB%27/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/screen.css">
+</head>
+<body>
+
+<div id="bar">
+  <span class="ref">Ecclesiastes 11:9 — Two Walls</span>
+  <span class="right">
+    <span class="badge room" id="roombadge">····</span>
+    <span class="badge" id="livebadge"><span class="pip"></span><span class="label">Starting…</span></span>
+    <span id="count">01 / 20</span>
+    <button class="navbtn" id="up" aria-label="Previous section">&uarr;</button>
+    <button class="navbtn" id="down" aria-label="Next section">&darr;</button>
+  </span>
+</div>
+
+<nav id="dots" aria-label="Sections"></nav>
+
+<button class="btn small" id="notesbtn">Leader notes</button>
+
+<aside id="notes" aria-label="Leader notes" aria-hidden="true">
+  <button class="btn small close" id="notesclose">Close</button>
+  <h3 style="font-family:var(--serif);font-size:26px;font-weight:300;margin:0 0 4px">Leader notes</h3>
+  <p class="dim" style="font-size:13px">Press <strong>N</strong> to open or close this panel. Only you see it.</p>
+
+  <h4>What's different from the paper version</h4>
+  <p>Nobody walks anywhere. The room answers on their phones, anonymously, and the projector draws the room for you. You lose the cost of walking across the floor in front of everyone — and you gain two things a room can't do: a first answer nobody shaded to match their friends, and the ability to show <em>who moved</em> without showing who they are.</p>
+
+  <h4>Before they arrive</h4>
+  <p>Open this page on the projector. Leave it on the join screen while they come in — watching their own alias land on the wall is the hook, and it gets phones out and connected before you need them. Read the four-letter room code out loud once.</p>
+
+  <h4>Timing — 45 minutes</h4>
+  <p>Join and opening question: 8 min. Round one and the whys: 6 min. Wall A: 5 min. Wall B uncovered: 5 min. The other verses: 5 min. Round two, the migration and the discussion: 18 min. Letters and close: 5 min. If you're running long, cut the verse sort, not the discussion.</p>
+
+  <h4>Don't correct the first answer</h4>
+  <p>When round one lands, ask two or three people why — and let every answer stand uncorrected. The moment you evaluate an answer, the honest ones stop coming and the rest of the session runs on performance.</p>
+
+  <h4>If someone means it</h4>
+  <p>You can no longer see who picked "waiting for me to mess up" — that's the deal you make for honest answers. Instead, every phone has a quiet "I'd actually like to talk to someone" button. If it lights up on your remote, say the alias out loud once, kindly, and let them come to you. Don't chase it in front of the room.</p>
+
+  <h4>Where you're aiming</h4>
+  <p>Not "be careful". The landing is that the second half of the verse is what makes the first half safe to take seriously — a gift you can't lose track of the giver on is a better gift, not a smaller one.</p>
+
+  <h4>Group size</h4>
+  <p>Works best with 8–25. Under about eight, the aliases stop being anonymous because people can guess who's who — turn off the one-word whys in <code>js/config.js</code>. Over 25, it only gets better: the room map is the one part of this that likes a crowd.</p>
+
+  <h4>If the wifi dies</h4>
+  <p>Open <code>leader.html</code> and use the hand tally. It's the same plus-and-minus counters as the paper version, and the session still works. Say so out loud rather than fighting it — "phones down, I'll count hands" costs you thirty seconds and nothing else.</p>
+
+  <h4>Keys</h4>
+  <p><strong>↑ ↓</strong> move. <strong>N</strong> these notes. <strong>R</strong> rehearsal mode — spawns twenty invented students so you can practise alone. <strong>M</strong> replays the migration. Never leave rehearsal mode on for a real session.</p>
+</aside>
+
+<main id="deck">
+
+  <!-- 1 : JOIN ................................................. -->
+  <section class="slide" data-label="Join" data-stage="join">
+    <div class="wrap full">
+      <p class="kicker">Get your phone out — that's the only time I'll ever say that</p>
+      <div class="joingrid">
+        <div>
+          <div class="qrbox" id="qrbox"></div>
+          <p class="qrcap">Point your camera at this.</p>
+        </div>
+        <div>
+          <p class="dim" style="font-size:13px;margin:0 0 6px">or go to</p>
+          <p class="joinurl" id="joinurl">…</p>
+          <p class="dim" style="font-size:13px;margin:0 0 6px">and enter the code</p>
+          <p class="roomcode" id="roomcode">····</p>
+
+          <div class="rosterhead">
+            <span class="n" id="joincount">0</span>
+            <span class="lbl">in the room so far</span>
+          </div>
+          <div class="roster" id="roster">
+            <p class="emptyroster">Nobody yet. The first alias will appear here.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 : TITLE ................................................ -->
+  <section class="slide" data-label="Title" data-stage="hold">
+    <div class="wrap">
+      <p class="kicker">A session for youth, in four movements</p>
+      <h1>Two walls,<br>one sentence</h1>
+      <p class="lead">Ecclesiastes tells you to enjoy being young. In the same breath, it tells you you'll answer for it. This morning we work out why both halves are there.</p>
+      <p class="dim" style="font-size:14px">Scroll, or use the arrow keys.</p>
+    </div>
+  </section>
+
+  <!-- 3 : PART I ............................................... -->
+  <section class="slide part" data-label="Part one" data-stage="hold">
+    <div class="wrap">
+      <p class="num">I</p>
+      <p class="kicker">Part one</p>
+      <h2>Before we open the Bible</h2>
+      <p>We're going to find out what this room already believes — before anyone has a verse to hide behind.</p>
+    </div>
+  </section>
+
+  <!-- 4 : THE QUESTION ......................................... -->
+  <section class="slide" data-label="The question" data-stage="question">
+    <div class="wrap">
+      <div class="rule"></div>
+      <h2>When you're having a genuinely good time — what is God doing?</h2>
+      <p>Not when you're doing something you'd be ashamed of. Just a good weekend. Laughing till you can't breathe. A game you won. A day that went right.</p>
+      <p class="lead">What's the look on His face?</p>
+      <p class="hint">Ask it out loud. Let it be quiet for a second. Nobody answers yet — their phones are locked until the next slide.</p>
+    </div>
+  </section>
+
+  <!-- 5 : ROUND ONE ............................................ -->
+  <section class="slide" data-label="Round one" data-stage="corners1">
+    <div class="wrap full">
+      <p class="kicker">Answer on your phone — nobody sees which one you picked</p>
+      <div class="mapshell" data-map="r1" data-counts="hidden"></div>
+      <div class="waiting">
+        <span id="w1label">Waiting for the room…</span>
+        <span class="waitbar"><i id="w1bar"></i></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 : ROUND ONE REVEALED ................................... -->
+  <section class="slide" data-label="Where the room landed" data-stage="count1">
+    <div class="wrap full">
+      <p class="kicker">Where this room actually landed</p>
+      <div class="mapshell" data-map="r1b" data-counts="shown"></div>
+      <div class="words" id="words1"></div>
+      <p class="hint">Ask two or three people why. Don't correct anyone — you're finding out what they believe, and so are they. We'll ask this again at the end and see whether the room moved.</p>
+    </div>
+  </section>
+
+  <!-- 7 : PART II .............................................. -->
+  <section class="slide part" data-label="Part two" data-stage="hold">
+    <div class="wrap">
+      <p class="num">II</p>
+      <p class="kicker">Part two</p>
+      <h2>The first wall</h2>
+      <p>Read only this. Nothing else is uncovered yet.</p>
+    </div>
+  </section>
+
+  <!-- 8 : WALL A ............................................... -->
+  <section class="slide" data-label="Wall A" data-stage="wallA">
+    <div class="wrap wide">
+      <div class="split">
+        <div class="wall wall-a">
+          <p class="tag">Wall A</p>
+          <p class="verse">Rejoice, young man, in your youth, and let your heart cheer you in the days of your youth. Walk in the ways of your heart, and in the sight of your eyes.</p>
+          <p class="attrib">Ecclesiastes 11:9a — World English Bible</p>
+        </div>
+        <div class="wall wall-b">
+          <div class="cover"><span>Still covered</span></div>
+        </div>
+      </div>
+      <p class="hint">It's on their phones too, so they can actually read it. Let it sit. Then: does anything about that surprise you?</p>
+    </div>
+  </section>
+
+  <!-- 9 : SOUNDS LIKE PERMISSION ............................... -->
+  <section class="slide" data-label="Sounds like permission" data-stage="permission">
+    <div class="wrap">
+      <div class="rule"></div>
+      <h2>Somebody will say it sounds like a permission slip.</h2>
+      <p>Good. Sit in that for a minute rather than rushing past it. Most of them have never heard Scripture talk about pleasure this way — as a thing to go after, not a thing to survive.</p>
+      <p>Ask: <em>who do you know who'd read this out at church?</em></p>
+      <div class="sortbars" id="belongs"></div>
+    </div>
+  </section>
+
+  <!-- 10 : PART III ............................................ -->
+  <section class="slide part" data-label="Part three" data-stage="hold">
+    <div class="wrap">
+      <p class="num">III</p>
+      <p class="kicker">Part three</p>
+      <h2>The second wall</h2>
+      <p>When you take this sheet off, it comes off every phone in the room at the same moment.</p>
+    </div>
+  </section>
+
+  <!-- 11 : WALL B — UNCOVER .................................... -->
+  <section class="slide" data-label="Wall B — uncover" data-stage="wallB">
+    <div class="wrap wide">
+      <div class="split">
+        <div class="wall wall-a">
+          <p class="tag">Wall A</p>
+          <p class="verse">Rejoice, young man, in your youth… walk in the ways of your heart, and in the sight of your eyes.</p>
+        </div>
+        <div class="wall wall-b">
+          <p class="tag">Wall B</p>
+          <p class="verse">But know that for all these things God will bring you into judgment.</p>
+          <p class="attrib">Ecclesiastes 11:9b — World English Bible</p>
+          <div class="cover" id="coverB">
+            <span>Covered since they walked in</span>
+            <button class="btn" id="uncover">Take the sheet off</button>
+          </div>
+        </div>
+      </div>
+      <p class="hint" id="afterUncover" style="opacity:0;transition:opacity .5s">Say it plainly: same verse, same sentence, same author. He didn't put these in two different chapters.</p>
+    </div>
+  </section>
+
+  <!-- 12 : WALL A HAS WITNESSES ................................ -->
+  <section class="slide" data-label="Wall A has witnesses" data-stage="witnesses">
+    <div class="wrap wide">
+      <p class="kicker">Before anyone decides Wall A was a slip of the pen</p>
+      <h2>Wall A has witnesses.</h2>
+      <div class="verses" data-verses="witnesses"></div>
+      <p class="hint">Solomon says it more than once, and he isn't the only one saying it. If Wall A embarrasses us, that's our problem, not the Bible's.</p>
+    </div>
+  </section>
+
+  <!-- 13 : WALL B, HONESTLY .................................... -->
+  <section class="slide" data-label="Wall B, honestly" data-stage="honest">
+    <div class="wrap wide">
+      <p class="kicker">And we're not softening this half either</p>
+      <h2>Wall B, honestly.</h2>
+      <div class="verses" data-verses="honest"></div>
+      <p class="hint">Read the first two in that order, out loud, without a gap. The order is the whole gospel: the judgment is real, and it has already been answered for anyone in Christ. That's what stops the session ending on fear.</p>
+    </div>
+  </section>
+
+  <!-- 14 : VERSE SORT .......................................... -->
+  <section class="slide" data-label="Verse sort" data-stage="versesort">
+    <div class="wrap full">
+      <p class="kicker">Same four options. Which corner does this verse sound like?</p>
+      <div class="sortcard" id="sortcard"></div>
+      <div class="sortbars" id="sortbars"></div>
+      <div class="sortnav">
+        <button class="btn small" id="sortprev">Previous verse</button>
+        <button class="btn sun" id="sortnext">Next verse</button>
+      </div>
+      <p class="hint">They'll scatter these across all four corners. That's the point — sit in it for a second. Same God in all three verses. If Psalm 139 lands in "watching closely" and Ecclesiastes 9:7 lands in "He's glad", ask them which one they think is telling the truth.</p>
+    </div>
+  </section>
+
+  <!-- 15 : THE PRIVATE CONFRONTATION ........................... -->
+  <section class="slide part" data-label="Before you answer again" data-stage="confront">
+    <div class="wrap">
+      <p class="num">IV</p>
+      <p class="kicker">Part four</p>
+      <h2>Look at your own phone. Not at anyone else's.</h2>
+      <p>Every phone in this room is now showing that person the answer they gave at the start of the session, before they'd heard either wall. Nobody else can see it. Nobody ever will.</p>
+      <p class="lead">Read it. Then decide whether it's still true.</p>
+      <p class="hint">Give this twenty seconds of silence. This is the only moment in the session where every person in the room is having a different, private conversation — don't talk over it.</p>
+    </div>
+  </section>
+
+  <!-- 16 : ROUND TWO ........................................... -->
+  <section class="slide" data-label="Round two" data-stage="corners2">
+    <div class="wrap full">
+      <p class="kicker">Same question. You can leave it exactly where it was.</p>
+      <div class="mapshell" data-map="r2" data-counts="hidden"></div>
+      <div class="waiting">
+        <span id="w2label">Waiting for the room…</span>
+        <span class="waitbar"><i id="w2bar"></i></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 17 : THE MIGRATION ....................................... -->
+  <section class="slide" data-label="The migration" data-stage="migration">
+    <div class="wrap full">
+      <p class="kicker">Where you started · where you are now</p>
+      <div class="mapshell" data-map="mig" data-counts="shown"></div>
+      <p class="verdict" id="verdict"></p>
+      <p class="movestat" id="movestat"></p>
+      <p class="hint">Press <strong>M</strong> to play it again. Then ask the movers what changed — and ask the ones who didn't move why hearing the hard half changed nothing.</p>
+    </div>
+  </section>
+
+  <!-- 18 : THE CONVERSATION .................................... -->
+  <section class="slide" data-label="The conversation" data-stage="questions">
+    <div class="wrap">
+      <p class="kicker">The part that is actually the lesson</p>
+      <h2>Three questions. Take your time on the third.</h2>
+      <ol class="qs">
+        <li>Why does the second half feel like it cancels the first?</li>
+        <li>If you were writing this verse, which half would you have cut?</li>
+        <li>What if the judgment part isn't a threat — what if it's the reason the enjoyment is safe?</li>
+      </ol>
+      <p class="hint">This discussion <em>is</em> the lesson. Everything up to here was just what made them willing to have it. The third question is on their phones too, so the quiet ones can answer it in writing — check your remote afterwards.</p>
+    </div>
+  </section>
+
+  <!-- 19 : WHERE IT LANDS ...................................... -->
+  <section class="slide part" data-label="Where it lands" data-stage="lands">
+    <div class="wrap">
+      <div class="rule"></div>
+      <h2>A gift you can't lose track of the giver on is a better gift, not a smaller one.</h2>
+      <p>Solomon isn't telling them to enjoy less. He's telling them to enjoy awake. The bucket list mostly survives contact with eternity — it just gets edited.</p>
+    </div>
+  </section>
+
+  <!-- 20 : CLOSE ............................................... -->
+  <section class="slide" data-label="Close" data-stage="close">
+    <div class="wrap full">
+      <p class="kicker">Phones away — pen and paper for the last five minutes</p>
+      <h2>A letter to the person you'll be at thirty</h2>
+      <p>Envelopes, sealed, they keep them. Two prompts only: one thing I want to still be true about me, and one thing I don't want to be carrying.</p>
+
+      <div class="verses" data-verses="close" style="margin-top:26px"></div>
+
+      <p class="verse" style="color:var(--sun);font-size:clamp(19px,2.6vw,29px);margin-top:34px" id="zephline"></p>
+      <p class="attrib" id="zephref"></p>
+
+      <div class="portrait" id="portrait" style="margin-top:38px"></div>
+      <p class="hint">Read 11:10 through 12:1 aloud — it's the same thought finishing itself. Then Zephaniah, and stop. That's the answer to the question you opened with, and it's a better last word than anything you could add to it.</p>
+    </div>
+  </section>
+
+</main>
+
+<script type="module" src="js/screen.js"></script>
+</body>
+</html>
