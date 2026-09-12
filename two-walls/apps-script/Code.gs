@@ -46,8 +46,22 @@ function json_(obj) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
+// How long a built response is reused before the sheet is read again.
+// Every phone in the room polls this endpoint, so without a cache a class
+// of 25 would trigger tens of thousands of full-sheet reads in one session.
+// With it, concurrent polls collapse onto one read every couple of seconds.
+// Staleness is bounded by this value and is already smaller than the poll
+// interval, so nothing feels slower.
+const CACHE_SECONDS = 2;
+const CACHE_LIMIT_BYTES = 90000;   // CacheService rejects values over ~100KB
+
+function cacheKey_(room) {
+  return 'rows_' + (room || 'ALL');
+}
+
 /**
  * GET /exec?room=ABCD  ->  every row for that room.
+ * GET /exec?ping=1     ->  a health check that returns no student data.
  * Omit room to get everything (useful when poking at it by hand).
  *
  * "value" is stored as a JSON string and parsed back out here, so a
@@ -55,7 +69,29 @@ function json_(obj) {
  * real object.
  */
 function doGet(e) {
-  const wanted = (e && e.parameter && e.parameter.room ? String(e.parameter.room) : '').toUpperCase();
+  const params = (e && e.parameter) || {};
+
+  // Health check: lets you confirm the deployment works from a browser
+  // without dumping anybody's answers onto the screen.
+  if (params.ping) {
+    const sheet = getSheet_();
+    return json_({
+      ok: true,
+      sheet: SHEET_NAME,
+      rows: Math.max(0, sheet.getLastRow() - 1),
+      time: new Date().toISOString(),
+    });
+  }
+
+  const wanted = (params.room ? String(params.room) : '').toUpperCase();
+
+  const cache = CacheService.getScriptCache();
+  const key = cacheKey_(wanted);
+  const hit = cache.get(key);
+  if (hit) {
+    return ContentService.createTextOutput(hit).setMimeType(ContentService.MimeType.JSON);
+  }
+
   const sheet = getSheet_();
   const data = sheet.getDataRange().getValues();
   const rows = [];
@@ -80,14 +116,30 @@ function doGet(e) {
     });
   }
 
-  return json_(rows);
+  const body = JSON.stringify(rows);
+  if (body.length < CACHE_LIMIT_BYTES) {
+    cache.put(key, body, CACHE_SECONDS);
+  }
+  return ContentService.createTextOutput(body).setMimeType(ContentService.MimeType.JSON);
+}
+
+/**
+ * Drop the cached responses for a room so the very next poll rebuilds.
+ * Called after every write, which keeps a vote — and more importantly the
+ * Wall B reveal — from sitting behind a stale cache entry.
+ */
+function invalidate_(room) {
+  const cache = CacheService.getScriptCache();
+  cache.removeAll([cacheKey_(String(room || '').toUpperCase()), cacheKey_('ALL')]);
 }
 
 function doPost(e) {
   const payload = JSON.parse(e.postData.contents);
 
   if (payload && payload.action === 'clearRoom') {
-    return json_(clearRoom_(payload.roomCode));
+    const cleared = clearRoom_(payload.roomCode);
+    invalidate_(payload.roomCode);
+    return json_(cleared);
   }
 
   // A lock keeps two phones submitting in the same instant from both
@@ -126,6 +178,7 @@ function doPost(e) {
       sheet.appendRow(rowValues);
     }
 
+    invalidate_(room);
     return json_({ ok: true });
   } finally {
     lock.releaseLock();

@@ -142,6 +142,17 @@ ol.qs li:last-child{border-bottom:0}
 /* ============================================================
    JOIN SCREEN
    ============================================================ */
+[hidden]{display:none!important}
+.stale{
+  display:flex;align-items:center;gap:20px;flex-wrap:wrap;
+  border:1px solid var(--sun);border-left-width:3px;border-radius:2px;
+  padding:16px 20px;margin:0 0 28px;max-width:900px;
+  background:rgba(242,169,59,.07);
+}
+.stale strong{display:block;font-size:16px;margin-bottom:3px}
+.stale span{font-size:13.5px;color:var(--slate);line-height:1.5}
+.stale .btn{flex:0 0 auto}
+
 .joingrid{display:grid;grid-template-columns:minmax(0,400px) minmax(0,1fr);gap:clamp(28px,5vw,64px);align-items:center;width:100%}
 .qrbox{background:var(--chalk);padding:16px;border-radius:3px;width:100%;max-width:400px;aspect-ratio:1;display:flex;align-items:center;justify-content:center}
 .qrbox svg,.qrbox canvas{width:100%;height:100%;display:block;image-rendering:pixelated}

@@ -14,7 +14,7 @@ import {
   verseText, verdict, movement,
 } from './lesson.js';
 import {
-  getRoomCode, subscribe, publishControl, isOffline,
+  getRoomCode, subscribe, publishControl, isOffline, clearRoom,
   byKey, votesById, countsFor, roster,
 } from './room.js';
 import { toSvg } from './vendor/qrcode.js';
@@ -576,8 +576,62 @@ function updateBadge(offline = isOffline()) {
       : 'Live';
 }
 
+// ============================================================
+// LEFTOVERS FROM A PREVIOUS SESSION
+//
+// The room code is sticky so that a closed or crashed projector tab comes
+// back on the same room instead of stranding every phone in the building.
+// The cost of that is last week's answers still sitting there, which would
+// quietly poison the room map and the migration.
+//
+// Age tells the two cases apart: a projector that just reloaded mid-session
+// sees answers from minutes ago, while a previous session's are hours or
+// days old. Only the latter gets a warning.
+// ============================================================
+const STALE_AFTER_MS = 30 * 60 * 1000;
+let staleChecked = false;
+
+function checkForLeftovers(fresh) {
+  if (staleChecked) return;
+
+  const students = fresh.filter(
+    (r) => r.sessionId !== '__control' && r.sessionId !== '__leader',
+  );
+  if (!students.length) { staleChecked = true; return; }
+
+  const newest = Math.max(...students.map((r) => r.ts || 0));
+  const age = Date.now() - newest;
+  if (age < STALE_AFTER_MS) { staleChecked = true; return; }   // a live reload
+
+  staleChecked = true;
+  const people = roster(fresh).length;
+  const hours = Math.round(age / 3600000);
+  const when = hours < 48 ? `about ${hours} hour${hours === 1 ? '' : 's'} ago`
+    : `about ${Math.round(hours / 24)} days ago`;
+
+  const banner = document.getElementById('stale');
+  document.getElementById('staletext').textContent =
+    `This room still has ${students.length} answer${students.length === 1 ? '' : 's'} in it from ${people} ` +
+    `${people === 1 ? 'person' : 'people'}, last touched ${when}.`;
+  document.getElementById('stalesub').textContent =
+    'Clear them before you start, or they will be counted in the room map and the migration.';
+  banner.hidden = false;
+
+  document.getElementById('staleclear').onclick = async () => {
+    document.getElementById('staleclear').disabled = true;
+    await clearRoom(room);
+    rows = [];
+    banner.hidden = true;
+    document.getElementById('roster').innerHTML =
+      '<p class="emptyroster">Nobody yet. The first alias will appear here.</p>';
+    render();
+    pushControl();
+  };
+}
+
 // ---------- the loop ----------
 function tick(fresh, meta = {}) {
+  checkForLeftovers(fresh);
   rows = rehearsing ? [...fresh, ...syntheticRows()] : fresh;
   updateBadge(meta.offline ?? isOffline());
   render();

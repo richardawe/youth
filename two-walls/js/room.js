@@ -33,23 +33,41 @@ function mintRoomCode() {
  * refresh mid-session doesn't strand every phone in the room on a dead
  * code — but a brand new tab gets a brand new room.
  */
+const LAST_ROOM_KEY = 'two-walls-last-room';
+
 export function getRoomCode({ create = false } = {}) {
   if (ROOM_CODE) return ROOM_CODE.toUpperCase();
 
-  const fromUrl = new URLSearchParams(location.search).get('room');
+  const qs = new URLSearchParams(location.search);
+
+  const fromUrl = qs.get('room');
   if (fromUrl) return fromUrl.toUpperCase();
 
+  // The projector's code is sticky in localStorage, not just sessionStorage.
+  // If the laptop's browser is closed, crashes, or the tab is lost mid-session,
+  // reopening the page comes back on the SAME room and every phone in the
+  // building reconnects on its own. A fresh random code would strand all of
+  // them with no way back. Add ?newroom=1 to deliberately start a new room.
   try {
-    const saved = sessionStorage.getItem('two-walls-room');
-    if (saved) return saved;
+    if (create && !qs.has('newroom')) {
+      const last = localStorage.getItem(LAST_ROOM_KEY);
+      if (last) return last;
+    }
     if (create) {
       const fresh = mintRoomCode();
-      sessionStorage.setItem('two-walls-room', fresh);
+      localStorage.setItem(LAST_ROOM_KEY, fresh);
       return fresh;
     }
+    const saved = sessionStorage.getItem('two-walls-room');
+    if (saved) return saved;
   } catch { /* private mode — fall through */ }
 
   return create ? mintRoomCode() : '';
+}
+
+/** How many answers this room is already carrying (offline cache only). */
+export function localRowCount(room) {
+  return readOffline(room).length;
 }
 
 // ---------- offline store ----------
@@ -73,17 +91,49 @@ function upsertOffline(room, row) {
 }
 
 // ---------- live state ----------
-// Once a POST has failed we stop pretending we're online, so the leader's
-// "offline" badge is telling the truth rather than flickering.
+//
+// Church wifi drops packets. A single failed request must NOT strand the
+// room in offline mode for the rest of the session, so degrading takes a
+// run of consecutive failures, and any single success climbs straight back
+// out. The leader's badge then tells the truth without flickering on every
+// blip, and a network that recovers is a session that recovers.
+const FAILURES_BEFORE_OFFLINE = 3;
+let consecutiveFailures = 0;
 let degraded = false;
+
 export const isOffline = () => !isBackendConfigured() || degraded;
 
+function noteFailure(err) {
+  consecutiveFailures++;
+  if (!degraded && consecutiveFailures >= FAILURES_BEFORE_OFFLINE) {
+    degraded = true;
+    console.warn(`Switching to offline mode after ${consecutiveFailures} failures:`, err);
+  }
+}
+
+function noteSuccess() {
+  if (degraded) console.info('Live sync is back.');
+  consecutiveFailures = 0;
+  degraded = false;
+}
+
+/** A fetch that can't hang forever — a wedged request must not wedge the UI. */
+async function timedFetch(url, options, ms) {
+  const ac = new AbortController();
+  const t = setTimeout(() => ac.abort(), ms);
+  try {
+    return await fetch(url, { ...options, signal: ac.signal });
+  } finally {
+    clearTimeout(t);
+  }
+}
+
 async function post(body) {
-  const res = await fetch(SCRIPT_URL, {
+  const res = await timedFetch(SCRIPT_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
     body: JSON.stringify(body),
-  });
+  }, 8000);
   if (!res.ok) throw new Error(`POST failed: ${res.status}`);
   return res.json().catch(() => ({}));
 }
@@ -92,6 +142,11 @@ async function post(body) {
  * Write one answer. Upserts on (room, sessionId, key), so a student who
  * changes their mind replaces their answer instead of voting twice —
  * the same trick the AI-talk deck already relies on.
+ *
+ * A row that couldn't be sent is kept flagged as pending and replayed once
+ * the network is back. Without that, a wifi blip during round one would
+ * silently drop those votes from the room map — and from the migration,
+ * which is the one thing the session is built around.
  */
 export async function submit(room, identity, key, value) {
   const row = {
@@ -106,16 +161,37 @@ export async function submit(room, identity, key, value) {
   };
 
   upsertOffline(room, row);      // cache first so the UI can respond instantly
-  if (isOffline()) return { synced: false };
+  if (!isBackendConfigured()) return { synced: false };
 
+  // Attempt the send even while degraded: that attempt is how we discover
+  // the network is back.
   try {
     await post(row);
+    noteSuccess();
     return { synced: true };
   } catch (err) {
-    console.warn('Falling back to offline mode:', err);
-    degraded = true;
+    noteFailure(err);
+    upsertOffline(room, { ...row, _pending: true });
     return { synced: false };
   }
+}
+
+/** Replay anything written while the network was down. */
+async function flushPending(room) {
+  const pending = readOffline(room).filter((r) => r._pending);
+  if (!pending.length) return;
+
+  for (const row of pending) {
+    const { _pending, ...clean } = row;
+    try {
+      await post(clean);
+      upsertOffline(room, clean);          // clears the flag
+    } catch (err) {
+      noteFailure(err);
+      return;                              // still down; try again next tick
+    }
+  }
+  console.info(`Replayed ${pending.length} answer(s) saved while offline.`);
 }
 
 /** The projector publishes what stage the room is on. */
@@ -150,18 +226,24 @@ export function subscribe(room, callback) {
   async function tick() {
     if (stopped) return;
 
-    if (isOffline()) {
+    if (!isBackendConfigured()) {
       callback(readOffline(room), { offline: true });
     } else {
+      // Always try the network, degraded or not — this poll is what notices
+      // the wifi came back, and there's no other signal that would.
       try {
-        const res = await fetch(`${SCRIPT_URL}?room=${encodeURIComponent(room)}`, { method: 'GET' });
+        const res = await timedFetch(
+          `${SCRIPT_URL}?room=${encodeURIComponent(room)}`, { method: 'GET' }, 10000,
+        );
         if (!res.ok) throw new Error(String(res.status));
         const rows = await res.json();
-        callback(Array.isArray(rows) ? rows : [], { offline: false });
+        if (!Array.isArray(rows)) throw new Error('unexpected response shape');
+        noteSuccess();
+        await flushPending(room);
+        callback(rows, { offline: false });
       } catch (err) {
-        console.warn('Poll failed, switching to offline mode:', err);
-        degraded = true;
-        callback(readOffline(room), { offline: true });
+        noteFailure(err);
+        callback(readOffline(room), { offline: isOffline() });
       }
     }
 
